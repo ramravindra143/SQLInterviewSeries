@@ -1,0 +1,82 @@
+--Creating the employee table 
+CREATE TABLE EMPLOYEE(EMPID NUMBER(10),EMPNAME VARCHAR2(20),DATE_OF_JOINING DATE,DATE_OF_LEAVING DATE);
+
+--Inserting the data into EMPLOYEE Table
+INSERT ALL
+INTO EMPLOYEE VALUES(101,'Ravindra',to_date('01-01-2012','mm-dd-yyyy'),'')
+INTO EMPLOYEE VALUES(102,'Raghu',to_date('01-01-2014','mm-dd-yyyy'),'')
+INTO EMPLOYEE VALUES(103,'Ram',to_date('01-01-2018','mm-dd-yyyy'),'')
+INTO EMPLOYEE VALUES(104,'Surendra',to_date('01-01-2010','mm-dd-yyyy'),'')
+INTO EMPLOYEE VALUES(105,'Charan',to_date('01-01-2022','mm-dd-yyyy'),'')
+INTO EMPLOYEE VALUES(106,'Sathish',to_date('01-01-2002','mm-dd-yyyy'),to_date('01-01-2019','mm-dd-yyyy'))
+INTO EMPLOYEE VALUES(107,'Sashi',to_date('01-01-2013','mm-dd-yyyy'),'')
+INTO EMPLOYEE VALUES(108,'Phani',to_date('01-01-2016','mm-dd-yyyy'),'')
+INTO EMPLOYEE VALUES(109,'SRT',to_date('01-01-2021','mm-dd-yyyy'),to_date('01-01-2022','mm-dd-yyyy'))
+select * from dual;
+
+SELECT * FROM EMPLOYEE;
+
+--Creating the Employee_Details table 
+CREATE TABLE Employee_Details(EMPID NUMBER(10),gender VARCHAR2(20),	maritial_status VARCHAR2(20),	Hometown VARCHAR2(20));
+--Inserting the data into Employee_Details Table
+INSERT ALL
+INTO Employee_Details VALUES(101,'M','Married','Bangalore')
+INTO Employee_Details VALUES(102,'M','Married','Bangalore')
+INTO Employee_Details VALUES(103,'F','Married','Bangalore')
+INTO Employee_Details VALUES(104,'M','Single','Bangalore')
+INTO Employee_Details VALUES(105,'M','Married','Hyderabad')
+INTO Employee_Details VALUES(106,'M','Married','Hyderabad')
+INTO Employee_Details VALUES(107,'F','Single','Hyderabad')
+INTO Employee_Details VALUES(108,'M','Single','Hyderabad')
+INTO Employee_Details VALUES(109,'M','Single','Chennai')
+INTO Employee_Details VALUES(110,'F','Married','Chennai')
+SELECT * FROM DUAL;
+SELECT * FROM Employee_Details;
+--Creating the Depts table 
+CREATE TABLE Depts(dept_id NUMBER(10),dept_name VARCHAR2(20),EMPID NUMBER(10));
+--Inserting the data into Depts Table
+INSERT ALL
+INTO Depts VALUES(1,'Accounts',101)
+INTO Depts VALUES(2,'Physics',103)
+INTO Depts VALUES(3,'Chemistry',109)
+INTO Depts VALUES(4,'Bio',104)
+INTO Depts VALUES(5,'Litreture',102)
+INTO Depts VALUES(6,'Maths',103)
+INTO Depts VALUES(7,'Aeronics',110)
+SELECT * FROM DUAL;
+
+SELECT * FROM Depts;
+
+--Creating the SALARY table 
+CREATE TABLE SALARY(DEPT_ID NUMBER(10),SALARY_PER_DAY NUMBER(10));
+--Inserting the data into SALARY Table
+INSERT ALL 
+INTO SALARY VALUES(1,100)	
+INTO SALARY VALUES(2,120)	
+INTO SALARY VALUES(3,200)	
+INTO SALARY VALUES(4,300)	
+INTO SALARY VALUES(5,200)	
+INTO SALARY VALUES(6,150)	
+INTO SALARY VALUES(7,50)
+SELECT * FROM DUAL;
+
+SELECT * FROM SALARY;
+--
+SELECT 
+A.EMPNAME,C.dept_name,
+CASE WHEN B.gender='M' THEN 'MALE' 
+     WHEN B.GENDER='F' THEN 'FEMALE'
+	 ELSE 'OTHERS' END AS gender,
+CASE WHEN B.maritial_status='Single' THEN 'S' ELSE 'M' END AS maritial_status,
+B.Hometown,
+(TRUNC(SYSDATE-DATE_OF_JOINING) * Salary_per_day) as total_salary,
+case when A.date_of_leaving is null then 'Y' ELSE 'N' END AS active_flag,
+TRUNC(MONTHS_BETWEEN(SYSDATE,date_of_joining)/12) AS NO_OF_YEARS
+FROM 
+EMPLOYEE A
+INNER JOIN Employee_Details B 
+ON (A.EMPID=B.EMPID)
+INNER JOIN DEPTS C 
+ON (A.EMPID=C.EMPID)
+INNER JOIN Salary D 
+ON (C.DEPT_ID=D.DEPT_ID);
